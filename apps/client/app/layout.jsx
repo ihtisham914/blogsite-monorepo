@@ -4,20 +4,20 @@ import Notification from "@/components/Notification";
 import { Providers } from "./GlobalState/Provider";
 
 export const metadata = {
-  title: "Blog",
-  description: "Blog dashboard",
+  title: "Blogify",
+  description: "Blogify client",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gray-100">
         <section className="flex w-full">
           <Providers>
             <Notification />
             <div className="w-full">
               <Header />
-              <main>{children}</main>
+              <main className="mx-auto px-4 max-w-screen-lg">{children}</main>
             </div>
           </Providers>
         </section>
