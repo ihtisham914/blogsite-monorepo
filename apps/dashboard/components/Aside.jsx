@@ -32,17 +32,13 @@ function Aside() {
               <li
                 key={index}
                 onClick={() => clickHander(item.to, index)}
-                className={` py-4 flex w-full justify-start cursor-pointer items-center transition-all ${
+                className={`py-4 flex w-full justify-start cursor-pointer items-center transition-all border-l-4 ${
                   activeTab.index === index
-                    ? "bg-gray-100 font-bold text-primary-light border-l-4 border-primary-default"
+                    ? "bg-gray-100 font-bold text-primary-light  border-primary-default"
                     : ""
                 }`}
               >
-                <div
-                  className={`flex items-center justify-start ${
-                    activeTab.index === index ? "ml-[18px]" : "ml-6"
-                  }`}
-                >
+                <div className={`flex items-center justify-start ml-4`}>
                   {/* {item.icon} */}
                   <span className="text-lg ml-2">{item.name}</span>
                 </div>
