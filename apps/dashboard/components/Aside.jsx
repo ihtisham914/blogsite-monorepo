@@ -22,7 +22,7 @@ function Aside() {
   return (
     <div>
       {username ? (
-        <aside className="h-screen w-[200px] absolute shadow top-0">
+        <aside className="h-screen w-[200px] fixed shadow top-0">
           <div className="mt-4 pl-7">
             {/* <img src={Fgpc_logo} alt="logo" height="60px" width="60px" /> */}
             <h1 className="text-3xl font-bold ">Blogify</h1>
