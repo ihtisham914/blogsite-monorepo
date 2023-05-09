@@ -23,8 +23,7 @@ const Header = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="flex items-center gap-4 text-3xl text-primary-default">
-            <BsFillBellFill />
-            <h1 className="text-black text-lg">Ihtisham Ul Haq</h1>
+            <h1 className="text-black text-lg">Shadman Yosuf</h1>
             <div onClick={() => dispatch(SignOutUser)}>
               <FaUserCircle />
             </div>
