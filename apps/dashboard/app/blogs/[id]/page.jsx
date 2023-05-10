@@ -54,7 +54,7 @@ const page = ({ params }) => {
         </div>
 
         {/* single blog */}
-        <div className="rounded-xl w-2/3 shadow-md p-8 border-[1px] border-gray-100 my-8">
+        <div className="rounded-xl w-2/3 shadow-md px-10 py-8 border-[1px] border-gray-100 my-8">
           <h1 className="text-3xl font-bold">{singleBlog.title}</h1>
           <div className="flex items-center gap-1 text-sm font-bold text-gray-500 mt-4">
             <FiClock /> <span>{singleBlog.createdAt}</span>
@@ -62,9 +62,9 @@ const page = ({ params }) => {
           <Image
             src="/blog.jpg"
             alt="blog picture"
-            className="mt-4 h-full w-full"
-            width={20}
-            height={20}
+            className="mt-4 h-96 w-full rounded-md"
+            width={1}
+            height={1}
           />
           <div className="flex items-center gap-4 font-bold mt-3">
             <div className="flex items-center gap-1 text-xl">

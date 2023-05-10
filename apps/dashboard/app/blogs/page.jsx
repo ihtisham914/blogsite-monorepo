@@ -47,7 +47,7 @@ const blogs = () => {
           <div
             key={index}
             onClick={() => handleClick(blog.id)}
-            className="flex flex-col justify-end p-3 rounded-xl bg-[url('/blog.jpg')]  bg-center bg-cover h-52 w-72 shadow-md cursor-pointer hover:opacity-90 transition"
+            className="flex flex-col justify-end p-3 rounded-xl bg-[url('/blog.jpg')]  bg-center bg-cover h-52 w-72 shadow-md cursor-pointer hover:opacity-90 transition-all"
           >
             <div className="text-white ">
               <h1 className="text-xl font-bold">{blog.title}</h1>
