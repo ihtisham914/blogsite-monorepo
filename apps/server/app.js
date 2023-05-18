@@ -3,8 +3,9 @@ import Mongoose from "mongoose";
 import dotenv from "dotenv";
 import blogRouter from "./routes/blogRouter.js";
 import userRouter from "./routes/userRouter.js";
-import { logOut, signIn } from "./controller/userController.js";
+import reviewRouter from "./routes/reviewRouter.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config({ path: ".env" });
 
@@ -12,6 +13,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
 
 const DB = process.env.DATABASE.replace("<password>", process.env.DB_PASSWORD);
 Mongoose.set("strictQuery", true);
@@ -23,11 +30,8 @@ Mongoose.connect(DB, {
 
 // Moutning router on the route
 app.use("/api/v1/blogs", blogRouter);
-// app.use("/api/v1/users", userRouter);
-
-// loging in admin
-app.post("/api/v1/admin/login", signIn);
-app.get("/api/v1/admin/logout", logOut);
+app.use("/api/v1/admin", userRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 const port = process.env.PORT || 3000;
 

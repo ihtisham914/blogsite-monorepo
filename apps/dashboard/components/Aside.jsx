@@ -6,8 +6,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "@/app/GlobalState/TabSlice";
 
-// import Fgpc_logo  from '../assets/fgpc_logo.svg'
-
 function Aside() {
   const navigate = useRouter();
   const activeTab = useSelector((state) => state.Tab);
@@ -27,24 +25,24 @@ function Aside() {
             {/* <img src={Fgpc_logo} alt="logo" height="60px" width="60px" /> */}
             <h1 className="text-3xl font-bold ">Blogify</h1>
           </div>
-          <ul className="mt-6 w-full">
+          <div className="mt-8 flex flex-col  gap-2 ml-2">
             {items.map((item, index) => (
-              <li
+              <div
                 key={index}
                 onClick={() => clickHander(item.to, index)}
-                className={`py-4 flex w-full justify-start cursor-pointer items-center transition-all border-l-4 ${
+                className={`py-2 px-4 w-3/4 flex justify-start cursor-pointer items-center transition-all border-l-4 border-l-transparent rounded-full ${
                   activeTab.index === index
-                    ? "bg-gray-100 font-bold text-primary-light  border-primary-default"
+                    ? "bg-gray-100 text-primary-light  border-l-primary-default"
                     : ""
                 }`}
               >
-                <div className={`flex items-center justify-start ml-4`}>
-                  {/* {item.icon} */}
-                  <span className="text-lg ml-2">{item.name}</span>
-                </div>
-              </li>
+                {/* <div className={`flex items-center justify-start ml-4`}> */}
+                <span className="text-lg">{item.icon}</span>
+                <span className="text-md ml-2">{item.name}</span>
+                {/* </div> */}
+              </div>
             ))}
-          </ul>
+          </div>
         </aside>
       ) : (
         ""

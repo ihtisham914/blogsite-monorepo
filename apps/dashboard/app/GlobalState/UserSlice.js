@@ -1,16 +1,38 @@
 "use client";
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-hot-toast";
 
 export const UserSlice = createSlice({
   name: "User",
   initialState: {
-    SignInData: {
-      username: "ihtisham",
-    },
+    SignInData: {},
+    pending: false,
+    error: false,
   },
   reducers: {
-    SignInUser: (state, action) => {
-      state.SignInData = action.payload;
+    SignInStart: (state) => {
+      state.pending = true;
+    },
+    SignInSuccess: (state, action) => {
+      state.pending = false;
+      state.SignInData = action.payload.data;
+
+      localStorage.setItem("User", JSON.stringify({ ...action?.payload.data }));
+
+      toast.success("Signed in successfully", {
+        position: "top-center",
+        style: { width: "auto", height: "auto" },
+        duration: 3000,
+      });
+    },
+    SignInError: (state, action) => {
+      state.error = true;
+      state.pending = false;
+      toast.error(action.payload, {
+        position: "top-center",
+        style: { width: "auto", height: "auto" },
+        duration: 3000,
+      });
     },
     SignOutUser: (state) => {
       state.SignInData = {};
@@ -18,5 +40,6 @@ export const UserSlice = createSlice({
   },
 });
 
-export const { SignInUser, SignOutUser } = UserSlice.actions;
+export const { SignInStart, SignInSuccess, SignInError, SignOutUser } =
+  UserSlice.actions;
 export default UserSlice.reducer;
