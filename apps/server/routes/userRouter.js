@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createuserdata } from "../controller/userController.js";
+import { signIn, logOut } from "../controller/userController.js";
 
 const userRouter = Router();
 
-// get all products
-userRouter.route("/").post(createuserdata);
+userRouter.route("/login").post(signIn);
+userRouter.route("/logout").post(logOut);
 
 export default userRouter;

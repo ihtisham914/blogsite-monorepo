@@ -1,5 +1,5 @@
-import { createError } from "../AppError.js";
-import { UserModel } from "../model/userModel.js";
+// import { createError } from "../AppError.js";
+// import { UserModel } from "../model/userModel.js";
 import jwt from "jsonwebtoken";
 
 // admin sign in
@@ -19,7 +19,7 @@ export const signIn = async (req, res, next) => {
       res.status(200).json({
         status: "success",
         message: "logged In successfully",
-        token,
+        data: { username, token },
       });
     } else {
       res.status(401).json({
@@ -47,20 +47,6 @@ export const logOut = async (req, res) => {
     res.status(500).json({
       status: "success",
       message: error,
-    });
-  }
-};
-
-export const createuserdata = async (req, res) => {
-  try {
-    const createUser = await UserModel.create(req.body);
-    createUser.save();
-    res.status(200).json(createUser);
-  } catch (error) {
-    res.status(400).json({
-      status: "failed",
-      success: false,
-      Error: error,
     });
   }
 };
