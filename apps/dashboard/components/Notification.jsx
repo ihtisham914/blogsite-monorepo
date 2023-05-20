@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 function Notification() {
   return (
     <>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" duration="3000" />
     </>
   );
 }

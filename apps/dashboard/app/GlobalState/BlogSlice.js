@@ -45,6 +45,8 @@ const BlogSlice = createSlice({
   reducers: {
     GetBlogsStart: (state) => {
       state.pending = true;
+      console.log(state.pending);
+      console.log("End of the start reducer");
     },
     GetBlogsSuccess: (state, action) => {
       state.pending = false;

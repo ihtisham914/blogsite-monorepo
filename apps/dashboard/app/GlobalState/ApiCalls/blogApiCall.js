@@ -1,27 +1,73 @@
 import axios from "axios";
-import { GetBlogsStart, GetBlogsSuccess, GetBlogsError } from "../BlogSlice";
 import { config } from "./config";
+import { toast } from "react-hot-toast";
 
 const API = axios.create({ baseURL: "http://localhost:8000/api/v1" });
 
-export const GetBlogs = async (dispatch) => {
-  dispatch(GetBlogsStart());
-
+export const CreateBlog = async (newBlog) => {
   try {
-    const res = await API.get("/blogs");
-
-    console.log(res.data.data);
-    dispatch(GetBlogsSuccess(res.data.data));
-    return res.data.data;
-  } catch (err) {
-    if (err.response) {
-      if (err.response.status == 400) {
-        dispatch(GetBlogsError("Couldn't get All blogs"));
-        return err.response.status;
+    const res = await API.post("/blogs", { ...newBlog });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status == 401) {
+        toast.error("You are not authorized to create blog", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
       } else {
-        dispatch(GetBlogsError("Server error, please try again later"));
-        return err.response.status;
+        toast.error("something went wrong!", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
       }
     }
   }
 };
+
+// Edit blog
+export const EditBlog = async (editBlog, id) => {
+  try {
+    const res = await API.patch(`/blogs/${id}`, { ...editBlog });
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status == 401) {
+        toast.error("You are not authorized to Edit blog", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
+      } else {
+        toast.error("something went wrong!", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
+      }
+    }
+  }
+};
+
+export const DeleteBlog = async (id) => {
+  try {
+    const res = await API.delete(`/blogs/${id}`);
+    return res;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status == 401) {
+        toast.error("You are not authorized to delete this blog", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
+      } else {
+        toast.error("something went wrong!", {
+          style: { width: "auto", height: "auto" },
+        });
+        return error.response.status;
+      }
+    }
+  }
+};
+
+export default API;

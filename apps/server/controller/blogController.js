@@ -4,7 +4,7 @@ import { BlogModel } from "../model/blogModel.js";
 // Getting all products
 export const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await BlogModel.find();
+    const blogs = await BlogModel.find().sort({ _id: -1 });
     res.status(200).json({
       status: "success",
       requestedAt: req.requestTime,

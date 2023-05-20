@@ -12,14 +12,10 @@ import { verifyAdminToken } from "../middleware/verifyToken.js";
 
 const blogRouter = Router();
 
-blogRouter.route("/").get(getAllBlogs).post(verifyAdminToken, createBlog);
+blogRouter.route("/").get(getAllBlogs).post(createBlog);
 
 //  routes for admin
-blogRouter
-  .route("/:id")
-  .get(getBlog)
-  .patch(verifyAdminToken, updateBlog)
-  .delete(verifyAdminToken, deleteBlog);
+blogRouter.route("/:id").get(getBlog).patch(updateBlog).delete(deleteBlog);
 
 // routes for client
 blogRouter.patch("/like/:id", likeBlog);

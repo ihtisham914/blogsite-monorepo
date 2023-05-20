@@ -1,19 +1,47 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { AiFillHome } from "react-icons/ai";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { setActiveTab } from "../GlobalState/TabSlice";
 import { useDispatch } from "react-redux";
 import { AllReviews } from "@/public/projectdata/reviews";
-import { HiUserCircle } from "react-icons/hi";
+import { HiUserCircle, HiStar } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { UpdateStore } from "../GlobalState/UserSlice";
+import API from "../GlobalState/ApiCalls/blogApiCall";
+import { Puff } from "react-loader-spinner";
 
 const reviews = () => {
   const navigate = useRouter();
   const dispatch = useDispatch();
+  const [reviews, setReviews] = useState([]);
+  const [pending, setPending] = useState(true);
+  const [error, setError] = useState(false);
   const { username, token } = useSelector((state) => state.User.SignInData);
+
+  const GetReviews = async (url) => {
+    try {
+      const res = await url.get(`/reviews`);
+      if (res && !res.error) {
+        setTimeout(() => setPending(false), 1000);
+      }
+      setReviews(res.data.data);
+    } catch (error) {
+      setError(true);
+    }
+    if (error)
+      toast.error(error, {
+        position: "top-center",
+        style: { width: "auto", height: "auto" },
+        duration: 3000,
+      });
+  };
+
+  useEffect(() => {
+    GetReviews(API);
+  }, []);
+
   return (
     <>
       {username && token ? (
@@ -44,25 +72,49 @@ const reviews = () => {
             <div className="flex items-center gap-2">
               <span>Total Reviews:</span>
               <span className="px-3 py-1 rounded-full bg-primary-default text-white">
-                {AllReviews.length}
+                {reviews.length}
               </span>
             </div>
-            {AllReviews.map((review, index) => (
-              <div key={index} className="flex items-start gap-2 mt-2">
-                <div className="flex items-center gap-2">
-                  <HiUserCircle className="text-5xl text-gray-500" />
-                </div>
-                <div className="px-3 py-1 rounded-lg bg-gray-100">
-                  <div className="flex items-center gap-2">
-                    <h1 className="font-bold">{review.name}</h1>
-                    <span className="text-[10px] font-semibold">
-                      reviewed on April 03, 2023
-                    </span>
-                  </div>
-                  <span>{review.comment}</span>
-                </div>
+            {pending ? (
+              <div className="flex items-center justify-center h-full w-full">
+                <Puff width="400" color="#4fa94d" />
               </div>
-            ))}
+            ) : (
+              <>
+                {reviews.map((review, index) => (
+                  <div key={index} className="flex items-start gap-2 mt-2">
+                    <div className="flex items-center gap-2">
+                      <HiUserCircle className="text-5xl text-gray-500" />
+                    </div>
+                    <div className=" flex flex-col gap-1 px-3 py-1 rounded-lg bg-gray-100">
+                      <div className="flex items-center gap-2">
+                        <h1 className="font-bold">{review.name}</h1>
+                        <span className="text-[10px] font-semibold">
+                          reviewed on {review?.createdAt?.split("T")[0]}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        {Array(review.rating)
+                          .fill()
+                          .map((star, index) => (
+                            <div key={index} className="text-primary-default">
+                              <HiStar />
+                            </div>
+                          ))}
+                        {Array(5 - review.rating)
+                          .fill()
+                          .map((star, index) => (
+                            <div key={index} className="text-gray-300">
+                              <HiStar />
+                            </div>
+                          ))}
+                      </div>
+                      <span>{review.text}</span>
+                    </div>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       ) : (

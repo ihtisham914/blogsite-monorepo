@@ -1,38 +1,48 @@
 "use client";
-import React, { useState, useRef, useMemo } from "react";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { AiFillHome } from "react-icons/ai";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { HiCamera } from "react-icons/hi";
-import { setActiveTab } from "../GlobalState/TabSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import JoditEditor from "jodit-react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { validateBlog } from "@/Schema_validation/NewBlogSchema";
 import Image from "next/image";
-import { CreateBlog } from "../GlobalState/ApiCalls/blogApiCall";
-
-const newblog = () => {
+import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+import { EditBlog } from "@/app/GlobalState/ApiCalls/blogApiCall";
+import API from "@/app/GlobalState/ApiCalls/blogApiCall";
+const page = ({ params }) => {
+  const id = params.id;
   const navigate = useRouter();
   const dispatch = useDispatch();
   const { username, token } = useSelector((state) => state.User.SignInData);
+  const [pending, setPending] = useState(true);
+  const [error, setError] = useState(false);
   const editor = useRef(null);
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const imageRef = useRef("");
-  const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [pending, setPending] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(validateBlog) });
+  const GetBlog = async (url, id) => {
+    try {
+      const res = await url.get(`/blogs/${id}`);
+      if (res && !res.error) {
+        setTimeout(() => setPending(false), 1000);
+      }
+      const blogData = res.data.data;
+      setTitle(blogData.title);
+      setContent(blogData.description);
+      setImageUrl(blogData.imageUrl);
+    } catch (error) {
+      setError(true);
+    }
+  };
+
+  useEffect(() => {
+    GetBlog(API, id);
+  }, []);
 
   const UploadAttachment = async (e) => {
     setLoading(true);
@@ -58,20 +68,16 @@ const newblog = () => {
         setImageUrl(imageData.secure_url);
         setLoading(false);
         toast.success("Image Uploaded Successfully", {
-          position: "top-center",
           style: { width: "auto", height: "auto" },
-          duration: 3000,
         });
-        console.log(imageData.secure_url);
-        setImage(fileUrl);
       } catch (err) {
         setLoading(false);
-        console.log(err);
       }
     }
   };
 
-  const onSubmit = async (data) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!imageUrl) {
       toast.error("Please Upload blog image first", {
         style: { width: "auto", height: "auto" },
@@ -79,28 +85,30 @@ const newblog = () => {
       return;
     }
     setPending(true);
-    const { title } = data;
-    const NewBlog = {
+    const EditBlogData = {
       title: title,
       description: content,
       imageUrl: imageUrl,
     };
-    // calling API for creating blog
-    const res = await CreateBlog(NewBlog);
+    console.log(EditBlogData);
+    // calling API for Editing blog
+    const res = await EditBlog(EditBlogData, id);
+    console.log(res);
     if (res.status == "success") {
+      console.log(res);
       const id = res.data.blog._id;
       setPending(false);
+      toast.success("Blog Edited Successfully", {
+        style: {
+          height: "auto",
+          width: "auto",
+        },
+      });
       navigate.push(`/blogs/${id}`);
-      toast.success("Blog Published! redirecting to Blogs page", {
-        style: { width: "auto", height: "auto" },
-      });
+
       // after calling api clear the form
-      reset();
-      setImage(null);
-    } else {
-      toast.error("Blog Publishing failed! Please Try again 🙂", {
-        style: { width: "auto", height: "auto" },
-      });
+      setTitle("");
+      setContent("");
     }
   };
 
@@ -123,18 +131,40 @@ const newblog = () => {
               <MdOutlineArrowForwardIos />
             </span>
             <span
-              title="New Blog"
+              title="All Blogs"
+              onClick={() => {
+                navigate.push("/blogs");
+                dispatch(setActiveTab(1));
+              }}
+              className="flex items-center justify-center cursor-pointer text-sm text-primary-default px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-all"
+            >
+              All Blogs
+            </span>
+            <span className="text-[10px] font-bold text-gray-500">
+              <MdOutlineArrowForwardIos />
+            </span>
+            <span
+              title="visit current blog"
+              onClick={() => {
+                navigate.push(`/blogs/${id}`);
+              }}
+              className="flex items-center justify-center cursor-pointer text-sm text-primary-default px-3 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
+            >
+              blog
+            </span>
+            <span className="text-[10px] font-bold text-gray-500">
+              <MdOutlineArrowForwardIos />
+            </span>
+            <span
+              title="Edit current blog"
               className="flex items-center justify-center cursor-pointer text-sm text-primary-default px-3 py-1 rounded-full bg-gray-200"
             >
-              <span>NewBlog</span>
+              edit blog
             </span>
           </div>
 
-          {/* new blog */}
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-6 rounded-xl w-full md:w-full lg:w-full xl:w-[85%] shadow-md px-10 py-8 border-[1px] border-gray-100 my-8"
-          >
+          {/* edit blog form */}
+          <form className="flex flex-col gap-6 rounded-xl w-full md:w-full lg:w-full xl:w-[85%] shadow-md px-10 py-8 border-[1px] border-gray-100 my-8">
             <div className={`relative rounded-md w-full h-[450px] `}>
               <div
                 className={`w-full h-full object-cover border-2 rounded-md border-gray-200 shadow-md ${
@@ -143,10 +173,10 @@ const newblog = () => {
                     : ""
                 } `}
               >
-                {image ? (
+                {imageUrl ? (
                   <Image
                     className="rounded-md h-full w-full aspect-auto"
-                    src={image}
+                    src={imageUrl}
                     width={2000}
                     height={2000}
                     alt="previewImage"
@@ -208,39 +238,27 @@ const newblog = () => {
                 type="text"
                 name="title"
                 id="title"
-                {...register("title")}
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter Title of the blog"
-                className={`outline-none rounded-md border-2 border-gray-400 px-3 py-2 text-lg focus:border-primary-default font-bold ${
-                  errors.title ? "focus:border-red-500" : ""
-                }`}
+                className={`outline-none rounded-md border-2 border-gray-400 px-3 py-2 text-lg focus:border-primary-default font-bold`}
               />
-              <div className="text-sm text-red-500">
-                {errors.title?.message}
-              </div>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="title" className="text-lg">
                 Enter Blog Description
               </label>
-              {/* <input
-                type="text"
-                {...register("description")}
-                placeholder="Start typing..."
-                className={`outline-none rounded-md border-2 border-gray-400 px-3 py-2 text-lg focus:border-primary-default ${
-                  errors.description ? "focus:border-red-500" : ""
-                } `}
-              /> */}
+
               <JoditEditor
                 ref={editor}
                 value={content}
                 onChange={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
               />
-              {/* <div className="text-sm text-red-500">
-                {errors.description?.message}
-              </div> */}
             </div>
             <button
               type="submit"
+              onClick={(e) => handleSubmit(e)}
               className="px-2 py-2 text-white rounded-md shadow-md hover:shadow-lg bg-primary-default hover:bg-primary-dark active:scale-95 transition-all w-40"
             >
               {pending ? (
@@ -261,7 +279,7 @@ const newblog = () => {
                   />
                 </svg>
               ) : (
-                "Publish Blog"
+                "Edit & Publish Blog"
               )}
             </button>
           </form>
@@ -273,4 +291,4 @@ const newblog = () => {
   );
 };
 
-export default newblog;
+export default page;

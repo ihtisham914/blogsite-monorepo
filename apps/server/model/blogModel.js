@@ -15,7 +15,6 @@ const blogSchema = new Mongoose.Schema(
     comments: {
       type: [
         {
-          username: String,
           email: String,
           desc: String,
         },
