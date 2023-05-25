@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const dispatch = useDispatch();
   const { username, token } = useSelector((state) => state.User.SignInData);
-  console.log(username, token);
 
   return (
     <div className="container">

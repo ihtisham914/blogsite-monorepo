@@ -4,10 +4,11 @@ import {
   deleteReview,
   getAllReviews,
 } from "../controller/reviewController.js";
+import { verifyAdminToken } from "../middleware/verifyToken.js";
 
 const reviewRouter = Router();
 
-reviewRouter.route("/").get(getAllReviews).post(createReview);
-reviewRouter.route("/:id").delete(deleteReview);
+reviewRouter.route("/").get(verifyAdminToken, getAllReviews).post(createReview);
+reviewRouter.route("/:id").delete(verifyAdminToken, deleteReview);
 
 export default reviewRouter;

@@ -1,15 +1,17 @@
 export const AllReviews = [
   {
     name: "Umair ahmad",
-    comment: "The articles are amazing",
+    rating: 5,
+    text: "The articles are amazing",
   },
   {
     name: "hikmat Bangash",
-    comment: "I love this site",
+    rating: 3,
+    text: "I love this site",
   },
   {
     name: "Talha wajid",
-    comment:
-      "The staff was great. The receptionists were very helpful and answered all our questions. The room was clean and bright, and the room service was always on time. Will be coming back! Thank you so much.",
+    rating: 4,
+    text: "The staff was great. The receptionists were very helpful and answered all our questions. The room was clean and bright, and the room service was always on time. Will be coming back! Thank you so much.",
   },
 ];

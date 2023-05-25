@@ -23,7 +23,7 @@ const Header = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="flex items-center gap-4 text-3xl text-primary-default">
-            <h1 className="text-black text-lg">Shadman Yosuf</h1>
+            <h1 className="text-black text-lg font-bold">Ihtisham Ul Haq</h1>
             <div onClick={() => dispatch(SignOutUser)}>
               <FaUserCircle />
             </div>
