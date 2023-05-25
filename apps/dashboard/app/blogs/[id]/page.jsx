@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AiFillHome } from "react-icons/ai";
-import { FiClock } from "react-icons/fi";
+import { AiFillClockCircle } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { MdOutlineArrowForwardIos } from "react-icons/md";
 import { ImBin } from "react-icons/im";
 import { HiUserCircle } from "react-icons/hi";
-import { BiLike } from "react-icons/bi";
+import { AiFillLike } from "react-icons/ai";
 import { setActiveTab } from "../../GlobalState/TabSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -109,20 +109,24 @@ const page = ({ params }) => {
                     </button>
                   </div>
                 </div>
-                <Image
-                  src={blog.imageUrl || "/blog.jpg"}
-                  alt="blog picture"
-                  className="mt-4 h-96 w-full rounded-md"
-                  width={2000}
-                  height={2000}
-                />
-                <div className="flex items-center gap-4 font-bold mt-3">
-                  <div className="flex items-center gap-1 text-xl">
-                    <BiLike className="text-2xl" />
+                <div className="relative mt-4 h-96 w-full rounded-md">
+                  <div className="h-96 w-full rounded-md animate-pulse duration-75  bg-gray-400"></div>
+                  <Image
+                    src={blog.imageUrl}
+                    alt="blog picture"
+                    className="absolute top-0 bottom-0 left-0 right-0 h-96 w-full rounded-md"
+                    width={2000}
+                    height={2000}
+                  />
+                </div>
+                <div className="flex items-center gap-4 font-bold mt-3 text-gray-500">
+                  <div className="flex items-center gap-1 text-lg">
+                    <AiFillLike className="text-xl" />
                     <span className="text-primary-default">{blog.likes}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-xl  text-gray-500">
-                    <FiClock /> <span>{blog.createdAt.split("T")[0]}</span>
+                  <div className="flex items-center gap-1 text-lg">
+                    <AiFillClockCircle />{" "}
+                    <span>{blog.createdAt.split("T")[0]}</span>
                   </div>
                 </div>
                 <p className="mt-4 text-xl">

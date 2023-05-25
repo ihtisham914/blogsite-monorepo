@@ -6,7 +6,7 @@ const API = axios.create({ baseURL: "http://localhost:8000/api/v1" });
 
 export const CreateBlog = async (newBlog) => {
   try {
-    const res = await API.post("/blogs", { ...newBlog });
+    const res = await API.post("/blogs", { ...newBlog }, config);
     console.log(res.data);
     return res.data;
   } catch (error) {
@@ -29,7 +29,7 @@ export const CreateBlog = async (newBlog) => {
 // Edit blog
 export const EditBlog = async (editBlog, id) => {
   try {
-    const res = await API.patch(`/blogs/${id}`, { ...editBlog });
+    const res = await API.patch(`/blogs/${id}`, { ...editBlog }, config);
     console.log(res.data);
     return res.data;
   } catch (error) {
@@ -51,7 +51,7 @@ export const EditBlog = async (editBlog, id) => {
 
 export const DeleteBlog = async (id) => {
   try {
-    const res = await API.delete(`/blogs/${id}`);
+    const res = await API.delete(`/blogs/${id}`, config);
     return res;
   } catch (error) {
     if (error.response) {

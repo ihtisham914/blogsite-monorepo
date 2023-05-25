@@ -5,6 +5,7 @@ import { items } from "@/public/projectdata/asideData";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "@/app/GlobalState/TabSlice";
+import { setLoading } from "@/app/GlobalState/TabSlice";
 
 function Aside() {
   const navigate = useRouter();
@@ -12,13 +13,14 @@ function Aside() {
   const dispatch = useDispatch();
 
   const clickHander = (link, index) => {
+    dispatch(setLoading(true));
     navigate.push(`${link}`);
     dispatch(setActiveTab(index));
   };
   const { username } = useSelector((state) => state.User.SignInData);
 
   return (
-    <div>
+    <>
       {username ? (
         <aside className="h-screen w-[200px] fixed shadow top-0">
           <div className="mt-4 pl-7">
@@ -47,7 +49,7 @@ function Aside() {
       ) : (
         ""
       )}
-    </div>
+    </>
   );
 }
 

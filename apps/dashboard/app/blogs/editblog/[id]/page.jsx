@@ -93,9 +93,7 @@ const page = ({ params }) => {
     console.log(EditBlogData);
     // calling API for Editing blog
     const res = await EditBlog(EditBlogData, id);
-    console.log(res);
     if (res.status == "success") {
-      console.log(res);
       const id = res.data.blog._id;
       setPending(false);
       toast.success("Blog Edited Successfully", {
