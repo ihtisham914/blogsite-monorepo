@@ -8,16 +8,18 @@ import { AiFillLike } from "react-icons/ai";
 import { setActiveTab, setLoading } from "@/app/GlobalState/TabSlice";
 import { useDispatch } from "react-redux";
 import { Puff } from "react-loader-spinner";
+import { BsCaretLeftSquareFill, BsCaretRightSquareFill } from "react-icons/bs";
 // import { Allblogs } from "@/public/projectdata/blog";
 import { useSelector } from "react-redux";
 import API from "../GlobalState/ApiCalls/blogApiCall";
 import Image from "next/image";
-import { Interweave } from "interweave";
+
 const blogs = () => {
   const navigate = useRouter();
   const dispatch = useDispatch();
 
   const [blogs, setBlogs] = useState([]);
+  const [page, setPage] = useState(1);
   const [pending, setPending] = useState(true);
   const [error, setError] = useState(false);
   const { username, token } = useSelector((state) => state.User.SignInData);
@@ -30,7 +32,8 @@ const blogs = () => {
       if (res && !res.error) {
         setTimeout(() => setPending(false), 1000);
       }
-      setBlogs(res.data.data);
+      const data = res.data.data;
+      setBlogs(data);
     } catch (error) {
       setError(true);
     }
@@ -39,6 +42,15 @@ const blogs = () => {
   useEffect(() => {
     GetBlogs(API);
   }, []);
+
+  const selectPagehandler = (selectedPage) => {
+    if (
+      selectedPage >= 1 &&
+      selectedPage <= Math.ceil(blogs.length / 10) &&
+      selectedPage !== page
+    )
+      setPage(selectedPage);
+  };
 
   const handleClick = (id) => {
     navigate.push(`/blogs/${id}`);
@@ -62,7 +74,7 @@ const blogs = () => {
       ) : (
         <>
           {username && token ? (
-            <div>
+            <>
               <div className="container flex flex-col gap-6">
                 <div className="flex items-center gap-4 -mb-4 text-md">
                   <span
@@ -94,55 +106,97 @@ const blogs = () => {
                   </div>
                 ) : (
                   <>
-                    {blogs.map(
-                      (
-                        { _id, title, likes, imageUrl, description, createdAt },
-                        index
-                      ) => (
-                        <div
-                          key={index}
-                          onClick={() => handleClick(_id)}
-                          className={`flex flex-col justify-end bg-gray-50 rounded-xl overflow-hidden w-72 shadow-md cursor-pointer hover:opacity-90 transition-all`}
-                        >
-                          <div className="relative h-52 w-full rounded-b-xl">
-                            <div className="h-52 w-full rounded-md animate-pulse duration-75  bg-gray-400"></div>
-                            <Image
-                              src={imageUrl}
-                              className="absolute top-0 bottom-0 left-0 right-0 h-52 w-full rounded-b-xl"
-                              height={1000}
-                              width={1000}
-                              alt={title}
-                            />
-                          </div>
-
-                          <div className="p-3">
-                            <div className="flex items-center gap-4 font-bold text-gray-500">
-                              <div className="flex items-center gap-1 text-sm">
-                                <span className="text-md">
-                                  <AiFillLike />
-                                </span>
-                                <span className="text-primary-light">
-                                  {likes}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1 text-sm">
-                                <AiFillClockCircle />
-                                <span>{createdAt?.split("T")[0]}</span>
-                              </div>
+                    {blogs
+                      .slice(page * 10 - 10, page * 10)
+                      .map(
+                        ({ _id, title, likes, imageUrl, createdAt }, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleClick(_id)}
+                            className={`flex flex-col justify-end bg-gray-50 rounded-xl overflow-hidden w-72 shadow-md cursor-pointer hover:opacity-90 transition-all`}
+                          >
+                            <div className="relative h-52 w-full rounded-b-xl">
+                              <div className="h-52 w-full rounded-md animate-pulse duration-75  bg-gray-400"></div>
+                              <Image
+                                src={imageUrl}
+                                className="absolute top-0 bottom-0 left-0 right-0 h-52 w-full rounded-b-xl"
+                                height={1000}
+                                width={1000}
+                                alt={title}
+                              />
                             </div>
-                            <h1 className="text-lg font-bold mt-2">{title}</h1>
-                            {/* <p className="text-sm">
+
+                            <div className="p-3">
+                              <div className="flex items-center gap-4 font-bold text-gray-500">
+                                <div className="flex items-center gap-1 text-sm">
+                                  <span className="text-md">
+                                    <AiFillLike />
+                                  </span>
+                                  <span className="text-primary-light">
+                                    {likes}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1 text-sm">
+                                  <AiFillClockCircle />
+                                  <span>{createdAt?.split("T")[0]}</span>
+                                </div>
+                              </div>
+                              <h1 className="text-lg font-bold mt-2">
+                                {title}
+                              </h1>
+                              {/* <p className="text-sm">
                               <Interweave content={description.slice(0, 100)} />
                               ...
                             </p> */}
+                            </div>
                           </div>
-                        </div>
-                      )
-                    )}
+                        )
+                      )}
                   </>
                 )}
               </div>
-            </div>
+              {blogs.length > 10 && (
+                <div className="flex items-center justify-center w-full">
+                  <div className="mt-14  flex items-center gap-2 text-2xl">
+                    <span
+                      className={
+                        page > 1
+                          ? "hover:text-primary-default transition-all cursor-pointer text-gray-700"
+                          : "opacity-0"
+                      }
+                      onClick={() => selectPagehandler(page - 1)}
+                    >
+                      <BsCaretLeftSquareFill />
+                    </span>
+                    {blogs.length > 10 &&
+                      [...Array(Math.ceil(blogs.length / 10))].map(
+                        (_, index) => (
+                          <span
+                            className={
+                              page === index + 1
+                                ? "bg-gray-300 font-semibold text-sm rounded-md px-2 py-1 cursor-pointer"
+                                : "bg-transparent text-sm rounded-md px-2 py-1  cursor-pointer"
+                            }
+                            onClick={() => selectPagehandler(index + 1)}
+                          >
+                            {index + 1}
+                          </span>
+                        )
+                      )}
+                    <span
+                      className={
+                        page < Math.ceil(blogs.length / 10)
+                          ? "hover:text-primary-default transition-all cursor-pointer text-gray-700"
+                          : "opacity-0"
+                      }
+                      onClick={() => selectPagehandler(page + 1)}
+                    >
+                      <BsCaretRightSquareFill />
+                    </span>
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             ""
           )}

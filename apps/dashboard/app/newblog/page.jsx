@@ -21,7 +21,7 @@ const newblog = () => {
   const navigate = useRouter();
   const dispatch = useDispatch();
   const { username, token } = useSelector((state) => state.User.SignInData);
-  const { loading } = useSelector((state) => state.Tab);
+  const { loading, activetab } = useSelector((state) => state.Tab);
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const imageRef = useRef("");
@@ -96,6 +96,7 @@ const newblog = () => {
       const id = res.data.blog._id;
       setPending(false);
       navigate.push(`/blogs/${id}`);
+      dispatch(setActiveTab(1));
       toast.success("Blog Published! redirecting to Blogs page", {
         style: { width: "auto", height: "auto" },
       });
