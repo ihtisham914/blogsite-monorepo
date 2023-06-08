@@ -1,13 +1,11 @@
 import axios from "axios";
-import { config } from "./config";
 import { toast } from "react-hot-toast";
-
+import { config } from "./config";
 const API = axios.create({ baseURL: "http://localhost:8000/api/v1" });
 
 export const CreateBlog = async (newBlog) => {
   try {
     const res = await API.post("/blogs", { ...newBlog }, config);
-    console.log(res.data);
     return res.data;
   } catch (error) {
     if (error.response) {

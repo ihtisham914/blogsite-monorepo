@@ -46,7 +46,7 @@ const blogs = () => {
   const selectPagehandler = (selectedPage) => {
     if (
       selectedPage >= 1 &&
-      selectedPage <= Math.ceil(blogs.length / 10) &&
+      selectedPage <= Math.ceil(blogs.length / 8) &&
       selectedPage !== page
     )
       setPage(selectedPage);
@@ -107,7 +107,7 @@ const blogs = () => {
                 ) : (
                   <>
                     {blogs
-                      .slice(page * 10 - 10, page * 10)
+                      .slice(page * 8 - 8, page * 8)
                       .map(
                         ({ _id, title, likes, imageUrl, createdAt }, index) => (
                           <div
@@ -155,9 +155,9 @@ const blogs = () => {
                   </>
                 )}
               </div>
-              {blogs.length > 10 && (
+              {blogs.length > 8 && (
                 <div className="flex items-center justify-center w-full">
-                  <div className="mt-14  flex items-center gap-2 text-2xl">
+                  <div className="my-10 flex items-center gap-2 text-2xl">
                     <span
                       className={
                         page > 1
@@ -168,8 +168,8 @@ const blogs = () => {
                     >
                       <BsCaretLeftSquareFill />
                     </span>
-                    {blogs.length > 10 &&
-                      [...Array(Math.ceil(blogs.length / 10))].map(
+                    {blogs.length > 8 &&
+                      [...Array(Math.ceil(blogs.length / 8))].map(
                         (_, index) => (
                           <span
                             className={
@@ -185,7 +185,7 @@ const blogs = () => {
                       )}
                     <span
                       className={
-                        page < Math.ceil(blogs.length / 10)
+                        page < Math.ceil(blogs.length / 8)
                           ? "hover:text-primary-default transition-all cursor-pointer text-gray-700"
                           : "opacity-0"
                       }

@@ -29,6 +29,7 @@ const newblog = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [load, setLoad] = useState(false);
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState(false);
 
   dispatch(setLoading(false));
 
@@ -104,6 +105,8 @@ const newblog = () => {
       reset();
       setImage(null);
     } else {
+      setPending(false);
+      setError(true);
       toast.error("Blog Publishing failed! Please Try again 🙂", {
         style: { width: "auto", height: "auto" },
       });

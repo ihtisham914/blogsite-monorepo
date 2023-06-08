@@ -20,10 +20,10 @@ const Header = () => {
   return (
     <div>
       <div className="bg-green-100 text-center p-1">anouncement</div>
-      <Image src={cover} className="h-[35vh] w-full" />
+      <Image src={cover} className="h-[40vh] w-full" alt="cover image" />
       {/* HEADER */}
-      <div className="bg-slate-400">
-        <div className="flex items-center justify-between mx-auto px-4 py-4 max-w-screen-lg">
+      <div className="border-2 border-gray-200 bg-white">
+        <div className="flex items-center justify-between mx-auto px-4 py-4 max-w-screen-xl">
           <ul className="flex items-center gap-6">
             {items.map((item, index) => (
               <li
@@ -41,7 +41,7 @@ const Header = () => {
               </li>
             ))}
           </ul>
-          <div>donat</div>
+          <div>donate</div>
         </div>
       </div>
     </div>

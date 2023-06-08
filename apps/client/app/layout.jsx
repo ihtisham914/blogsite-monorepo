@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
             <Notification />
             <div className="w-full">
               <Header />
-              <main className="mx-auto px-4 max-w-screen-lg">{children}</main>
+              <main className="mx-auto px-4 max-w-screen-xl">{children}</main>
             </div>
           </Providers>
         </section>
