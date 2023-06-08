@@ -3,7 +3,7 @@ import { ReviewModel } from "../model/reviewModel.js";
 // getting all reviews
 export const getAllReviews = async (req, res) => {
   try {
-    const reviews = await ReviewModel.find();
+    const reviews = await ReviewModel.find().sort({ _id: -1 });
     res.status(200).json({
       status: "success",
       requestedAt: req.requestTime,

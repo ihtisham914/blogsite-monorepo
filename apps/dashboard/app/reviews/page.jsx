@@ -30,7 +30,7 @@ const reviews = () => {
       }
       setReviews(res.data.data);
     } catch (error) {
-      if (error.response.status == 401) {
+      if (error?.response?.status == 401) {
         toast.error("You are not authorized! Try Sign again :)", {
           position: "top-center",
           style: { width: "auto", height: "auto" },
